@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Chinese recipe</title>
+    <style type="text/css">
+      body {
+        font-size: 28px;
+        font-weight: normal;
+        padding: 10px 20px;
+        /* background-image: url(../images/login-bg.jpg); */
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+      h2 {
+        width: 100%;
+        text-align: center;
+        color: #000;
+      }
+      .addbtn {
+        background-color: #ff5c00;
+        color: #fff;
+        border: 1px solid #ff5c00;
+        width: 8rem;
+        font-size: 22px;
+        height: 3rem;
+        margin-bottom: 10px;
+        float: right;
+        cursor: pointer;
+      }
+      .btnlist {
+        display: flex;
+        justify-content: space-between;
+      }
+      table.responsive {
+        width: 100%;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        background-color: rgba(255, 255, 255, 0.5);
+        /*border-collapse:collapse合并内外边距(去除表格单元格默认的2个像素内外边距*/
+      }
+      /* set the table cell border */
+
+      table.responsive th,
+      table.responsive td {
+        /* width: 40%; */
+        height: 5rem;
+        border: 1px solid #ccc;
+        color: #666;
+        padding: 0.5em 1em;
+      }
+      /* set the table header color */
+
+      table.responsive th {
+        font-weight: normal;
+        background: #f2f2f2;
+      }
+      /* set the hyperlink format */
+
+      table.responsive .actions a {
+        color: #ff5c00;
+        
+        text-decoration: none;
+        padding: 0 4px;
+      }
+
+      table.responsive .number,
+      table.responsive .actions {
+        text-align: center;
+      }
+      /* The following css styles are triggered when the capture browser width is up to 480px */
+      @media (max-width: 480px) {
+        body {
+          background-image: none;
+          display: block;
+        }
+        /* Clear the table style set under other widths */
+        table.responsive {
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none;
+          border: none;
+        }
+        /*Hide the table header (hiding here is different from hiding visiblity, hiding here will not leave a blank space for the hidden part, and visiblity will leave a blank space for the hidden part) */
+        table.responsive thead {
+          display: none;
+        }
+        /* Turn all tables into block-level elements so that the tables are displayed on their own */
+        table.responsive td {
+          display: block;
+          border: none;
+        }
+        /* Set the first case left-aligned and add color */
+        table.responsive .number {
+          text-align: left;
+          background: #35b558;
+        }
+        /* Set relative paths so that child elements use absolute paths */
+        table.responsive tr {
+          position: relative;
+        }
+        /* 通过绝对路径设置修改删除在第一行：
+		　　　　　　因number的position值为static，所以number会在tr容器的第一行，
+		　　　　　　这里修改删除通过绝对路径，设置距tr容器上面0px，则修改删除也会出现在tr容器第一行，这里一定要设置tr位置为相对路径 */
+        table.responsive .actions {
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+      }
+    </style>
+    <style>
+      /* 遮罩层 */
+      #overlay {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        /* IE9以下不支持rgba模式 */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* 兼容IE8及以下 */
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f000000,endColorstr=#7f000000);
+        display: none;
+      }
+      /* pop up body */
+      .popup {
+        background-color: #ffffff;
+        max-width: 400px;
+        min-width: 200px;
+        height: 240px;
+        border-radius: 5px;
+        margin: 100px auto;
+        text-align: center;
+      }
+      /* pop up head */
+      .popup_title {
+        height: 60px;
+        line-height: 60px;
+        border-bottom: solid 1px #cccccc;
+      }
+      /* pop up content */
+      .popup_content {
+        height: 50px;
+        line-height: 50px;
+        padding: 15px 20px;
+      }
+      /* button  */
+      .popup_btn {
+        padding-bottom: 10px;
+      }
+      /*pop up btn */
+      .popup_btn button {
+        color: #778899;
+        width: 40%;
+        height: 40px;
+        cursor: pointer;
+        border: solid 1px #cccccc;
+        border-radius: 5px;
+        margin: 5px 10px;
+        color: #ffffff;
+        background-color: #337ab7;
+      }
+      .container {
+        display: flex;
+        margin-top: 10rem;
+        align-items: center;
+        justify-content: space-between;
+        height: 30rem;
+      }
+      .left {
+        width: 35%;
+        height: 30rem;
+      }
+      .left img {
+        width: 100%;
+        height: 100%;
+      }
+      .left img:hover {
+        transform: scale(1.2);
+      }
+      .right {
+        width: 55%;
+        font-size: 16px;
+        line-height: 30px;
+      }
+      .right h2 {
+        color: #000;
+      }
+      /* The following css styles are triggered when the capture browser width is up to 480px */
+      @media (max-width: 480px) {
+        body {
+          background-image: none;
+          display: block;
+        }
+        .container .left {
+          width: 100%;
+          height: 30rem;
+        }
+        .container .left img {
+          width: 100%;
+          height: 100%;
+        }
+        .container .right {
+          width: 100%;
+          font-size: 16px;
+          line-height: 30px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Food and Cooking Data Overview</h2>
+    <div class="btnlist">
+      <button class="addbtn" id="login"></button>
+      <button class="addbtn" id="addbtn">add data</button>
+    </div>
+    <table class="responsive">
+      <thead>
+        <tr>
+          <th>Food ID</th>
+          <th>Food name</th>
+          <th>user name</th>
+          <th>Food descripe</th>
+          <th>Food operate</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="container">
+      <div class="left">
+        <img
+          src="../public/images/麻婆豆腐.webp"
+          class="img-responsive"
+          alt=""
+        />
+      </div>
+      <div class="right">
+        <h2>Mapo tofu recipe</h2>
+        <p>
+          1、cut the tofu,cut into thick slices,then cut into strips,and finally cut into small cubes,When cutting, choose to cut from the back to the front,so as to prevent the tofu from sticking to the knife,Then blanch the tofu, add a spoonful when blanching Salt,pour in the tofu,cook completely,about 1 minute.
+        </p>
+        <p>
+          2、 Pour the soup and tofu into the bowl together,The purpose of this step is to prevent the tofu from sticking together, and at the same time play a role in heat preservation,When it is cooked, the tofu will be cooked quickly,This is the key to the delicious tofu,Cut a piece of garlic Pony ears;prepare a small piece of beef,remove the fascia,cut into small pieces,then chop into fine pieces,not as fine as minced meat.
+         </p>
+        <p>
+          3、Take a plate,add two spoonfuls of bean paste,a spoonful of fermented soybeans, heat the oil, add minced beef, add a little cooking wine, a little salt for the bottom flavor, fry the beef crispy over low heat, and put it out for later use without washing Pour a little less oil into the pot, add the bean paste and tempeh, and stir until fragrant.
+        </p>
+        <p>
+          4、Add a spoonful of chili powder to increase the spiciness and make the color brighter. Add a small bowl of water to control the water content of the dried tofu. Pour it into the pot so that the water completely submerges the tofu. Then add a spoonful of monosodium glutamate and a spoonful of chicken essence. A spoonful of light soy sauce, cook on medium heat for five minutes, so that the tofu is thoroughly cooked and fully flavored.
+        </p>
+        <p>
+          5. When the water is 1/3 left, add the minced beef. This is the key to the crispy beef. Start the first thickening. The purpose of this step is to make the tofu tightly coated with the thickening sauce. Put in the garlic sprouts and push gently with a spoon. Start the second and third times to thicken the corn, the concentration is thicker, the juice is collected on high heat, and the oil is ready to be taken out of the pan and plated. When plated, be sure to use a deeper container for the plate, do not use a shallow plate, as a heat preservation The effect of burning the mouth, and finally sprinkle with pepper powder.
+        </p>
+      </div>
+    </div>
+    <div class="container">
+      <div class="right">
+        <h2>Kung Pao Chicken Recipe</h2>
+        <p>
+            1. 1 piece of green onion, a piece of ginger, 5g of soy sauce, 20g of cooking wine, 10g of vinegar,
+            Water starch 5g, salt 2g, peanut oil 10g,
+            10 dried chilies, 30 peppercorns, a little pepper, soak the chicken breasts in water in advance, wash to remove blood; cut the chicken breasts into about one-inch pieces.
+        </p>
+        <p>
+          2、Add 5g of soy sauce, 10g of cooking wine, water starch, pepper, peanut oil, and a little salt. Toss the seasoned chicken breasts to coat evenly. Peel the carrots, cut the cucumbers into strips and remove the seeds with a knife. Cut the carrot and cucumber into pieces about the size of the chicken breast, cut the ginger into slices, and cut the green onion into 1cm-sized pieces, set aside.
+        </p>
+        <p>
+            3. Take the oil pan, heat the oil to 50% heat, pour in the washed and dried peanuts, fry on low heat until the skin of the peanuts changes color slightly, then take it out. After the peanuts are fried, go to the last step, prepare the sauce: add 1 spoon of starch, 1 spoon of dark soy sauce, 2 spoons of soy sauce, 3 spoons of balsamic vinegar, a little pepper, salt, and a little water in a bowl to mix well.
+        </p>
+        <p>
+          4、Heat up the pan, pour in 10g of peanut oil, and fry the peppercorns and dried chilis over low heat until they are fragrant. After the dried chili and Chinese prickly ash are fried, remove them and discard them. Add the fried shallots and ginger slices directly to the fried oil, and continue to stir-fry until the aroma is released. Add the marinated chicken breasts and stir-fry over high heat. You can see that the chicken breasts are turning from pink to white very quickly.
+        </p>
+        <p>
+          5、After the chicken breasts are completely white, pour in the adjusted Gorgon sauce and continue to stir fry evenly. Pour in the gorgon juice and stir-fry for dozens of seconds before adding carrots and cucumbers. If you like carrots to be softer, you can add them in advance, stir-fry for a minute, and then add cucumbers. In the last step, add the fried peanuts, then turn off the heat, stir slightly evenly, and take out of the pan!
+        </p>
+      </div>
+      <div class="left">
+        <img
+          src="../public/images/宫保鸡丁.webp"
+          class="img-responsive"
+          alt=""
+        />
+      </div>
+    </div>
+
+    <!--pop up box -->
+    <div id="overlay">
+      <div class="popup">
+        <p class="popup_title">prompt</p>
+        <p class="popup_content"></p>
+        <div class="popup_btn">
+          <button class="confirmBtn" onclick="hidePopup()">confirm</button>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="../public/js/axios.min.js" type="text/javascript"></script>
+
+  <script>
+    var addbtn = document.querySelector("#addbtn");
+    addbtn.addEventListener("click", () => {
+      if (
+        JSON.parse(localStorage.getItem("user")) &&
+        JSON.parse(localStorage.getItem("user")).username
+      ) {
+        location.href = "/add";
+      } else {
+        var overlay = document.getElementById("overlay");
+        var popup_content = document.querySelector(".popup_content");
+        popup_content.innerHTML = " login ";
+        overlay.style.display = "block";
+      }
+    });
+    var login = document.querySelector("#login");
+    if (
+      JSON.parse(localStorage.getItem("user")) &&
+      JSON.parse(localStorage.getItem("user")).username
+    ) {
+      login.innerHTML = "exit login";
+      login.addEventListener("click", logout);
+    } else {
+      login.innerHTML = "login";
+      login.addEventListener("click", () => {
+        location.href = "/login";
+      });
+    }
+    function logout() {
+      localStorage.removeItem("user");
+      location.href = "/";
+    }
+    getData();
+    function getData() {
+      var template = "";
+      var tbody = document.querySelector("tbody");
+      axios({
+        url: "http://localhost:3000/query",
+        method: "POST", //'GET'
+      }).then(function (res) {
+        console.log(res.data);
+        if (res.data.res.length === 0) {
+          var overlay = document.getElementById("overlay");
+          var popup_content = document.querySelector(".popup_content");
+          popup_content.innerHTML = "暂无数据，可自行添加!";
+          overlay.style.display = "block";
+        } else {
+          console.log(res.data.res);
+          res.data.res.forEach((element) => {
+            template =
+              template +
+              `<tr>
+        <td class="number">${element.id}</td>
+        <td class="name">${element.foodname}</td>
+        <td class="name">${element.foodname}</td>
+        <td class="name">${element.descdata}</td>
+        <td class="actions">
+          <a href="javascript:;" onclick="deleteData(${element.id})">delate</a>
+        </td>
+      </tr>`;
+          });
+          tbody.innerHTML = template;
+        }
+      });
+    }
+    function deleteData(id) {
+      var overlay = document.getElementById("overlay");
+      if (
+        JSON.parse(localStorage.getItem("user")) &&
+        JSON.parse(localStorage.getItem("user")).username
+      ) {
+        axios({
+          url: "http://localhost:3000/delete",
+          method: "POST", //'GET'
+          data: {
+            id: id,
+          },
+        }).then((res) => {
+          if (res.data.res) {
+            document.querySelector(".popup_content").innerHTML = "delate success!";
+            overlay.style.display = "block";
+          } else {
+            document.querySelector(".popup_content").innerHTML =
+              "delate fail, try again later!";
+            overlay.style.display = "block";
+          }
+          getData();
+        });
+      } else {
+        var popup_content = document.querySelector(".popup_content");
+        popup_content.innerHTML = "login ...";
+        overlay.style.display = "block";
+      }
+    }
+    function hidePopup() {
+      var overlay = document.getElementById("overlay");
+      overlay.style.display = "none";
+    }
+  </script>
+</html>
